@@ -16,13 +16,13 @@ class RepoRequest(BaseModel):
 @app.post("/api/career/readme")
 async def generate_readme(request: RepoRequest):
     try:
-        repo_url = request.git_url
-        repo_files = DownloadRepoFiles(repo_url)
-        readme_content = GenerateREADME(repo_url, repo_files)
+        repoURL = request.git_url
+        repoFiles = DownloadRepoFiles(repoURL)
+        readmeContent = GenerateREADME(repoURL, repoFiles)
         
-        file_path = "/tmp/README.md"
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(readme_content)
+        filePath = "/tmp/README.md"
+        with open(filePath, "w", encoding="utf-8") as f:
+            f.write(readmeContent)
         
         '''
         return {
@@ -33,7 +33,7 @@ async def generate_readme(request: RepoRequest):
         '''
 
         return FileResponse(
-            file_path, 
+            filePath, 
             filename="README.md", 
             headers={"Content-Disposition": "attachment; filename=README.md"}
         )
