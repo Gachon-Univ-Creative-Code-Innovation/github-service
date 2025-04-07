@@ -2,9 +2,9 @@ from src.READMECreater.GithubFetcher import DownloadRepoFiles
 from src.READMECreater.READMEGenerator import GenerateREADME
 
 
-repo_url = input("GitHub URL 입력: ")
-files = DownloadRepoFiles(repo_url)
-readme = GenerateREADME(repo_url, files)
+repoURL = input("GitHub URL 입력: ")
+files = DownloadRepoFiles(repoURL)
+readme = GenerateREADME(repoURL, files)
 
 with open("README.md", "w") as f:
     f.write(readme)
