@@ -5,4 +5,4 @@ pydantic
 groq
 fuzzywuzzy
 google-generativeai
-
+python-dotenv

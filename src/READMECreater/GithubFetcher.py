@@ -1,8 +1,14 @@
+import os
+import re
 import requests
+from dotenv import load_dotenv
 
 # Github API Token을 사용하여 요청 헤더 설정
-GITHUB_TOKEN = "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"
-HEADERS = {"Authorization": f"Bearer {GITHUB_TOKEN}"} if GITHUB_TOKEN else {}
+envPath = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
+load_dotenv(dotenv_path=os.path.abspath(envPath))
+
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+HEADERS = {"Authorization": f"token {GITHUB_TOKEN}"} if GITHUB_TOKEN else {}
 
 # 지원하는 프로그래밍 언어별 확장자
 LANGUAGE_EXTENSIONS = {
@@ -51,7 +57,8 @@ def FetchFiles(url):
 
 # GitHub 저장소의 모든 코드 파일을 가져오는 함수
 def DownloadRepoFiles(repoURL):
-    apiURL = repoURL.replace("github.com", "api.github.com/repos") + "/contents/"
+    repoPath = re.sub(r"https://github.com/|.git$", "", repoURL.strip("/"))
+    apiURL = f"https://api.github.com/repos/{repoPath}/contents/"
     return FetchFiles(apiURL)
 
 

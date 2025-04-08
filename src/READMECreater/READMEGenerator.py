@@ -1,8 +1,13 @@
+import os
 from groq import Groq
+from dotenv import load_dotenv
 from .CodeAnalyzer import SummarizeKeywords
 from .CodeAnalyzer import AnalyzeRepository
 
-GROQ_API_KEY = "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"
+envPath = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
+load_dotenv(dotenv_path=os.path.abspath(envPath))
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 # GROQ API를 사용하여 README 생성
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -40,9 +45,9 @@ Generate a structured README based on the provided information.
 
 
 # README 생성 함수
-def GenerateREADME(repo_url, repo_files):
-    repo_name, imports, funcs, comments = AnalyzeRepository(repo_url, repo_files)
-    prompt = GeneratePrompt(repo_name, imports, funcs, comments)
+def GenerateREADME(repoURL, repoFiles):
+    repoName, imports, funcs, comments = AnalyzeRepository(repoURL, repoFiles)
+    prompt = GeneratePrompt(repoName, imports, funcs, comments)
 
     chat = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}], model="qwen-2.5-coder-32b"
