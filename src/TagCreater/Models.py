@@ -1,7 +1,5 @@
 import json
 import re
-import google.generativeai as genai
-from groq import Groq
 
 results = {}
 

@@ -7,5 +7,7 @@ fuzzywuzzy
 google-generativeai
 python-Levenshtein
 python-dotenv
-jwt
+pyjwt
 pybase64
+supabase
+httpx

@@ -1,8 +1,8 @@
 import os
 from groq import Groq
 from dotenv import load_dotenv
-from .CodeAnalyzer import SummarizeKeywords
-from .CodeAnalyzer import AnalyzeRepository
+from src.READMECreater.CodeAnalyzer import SummarizeKeywords
+from src.READMECreater.CodeAnalyzer import AnalyzeRepository
 
 envPath = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
 load_dotenv(dotenv_path=os.path.abspath(envPath))

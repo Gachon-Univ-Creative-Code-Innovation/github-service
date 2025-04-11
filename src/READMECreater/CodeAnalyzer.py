@@ -1,7 +1,7 @@
 import re
 import ast
 from collections import Counter
-from .GithubFetcher import GetLanguageExtensions
+from src.READMECreater.GithubFetcher import GetLanguageExtensions
 
 
 # 공통 주석 추출 함수

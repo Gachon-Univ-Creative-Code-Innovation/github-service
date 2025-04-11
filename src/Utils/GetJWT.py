@@ -1,7 +1,8 @@
 import jwt
 import base64
 import os
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request
+from dotenv import load_dotenv
 
 app = FastAPI()
 
@@ -9,6 +10,9 @@ app = FastAPI()
 # Token에서 필요한 정보 받아내는 코드
 # getWhat -> 'sub' = 이메일, 'user_id' = 유저 ID, 'role' = USER/HEAD_HUNTER
 def GetDataFromToken(token, getWhat):
+    envPath = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
+    load_dotenv(dotenv_path=os.path.abspath(envPath))
+
     secretKey = os.getenv("JWT_SECRET")
     try:
         decodedSecret = base64.b64decode(secretKey)
