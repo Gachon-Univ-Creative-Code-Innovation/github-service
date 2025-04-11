@@ -117,3 +117,9 @@ async def GenerateTag(request: RepoRequest):
             status_code=400,
             content={"status": 400, "message": "Tag 생성 실패", "data": None},
         )
+
+
+# 헬스 체크
+@app.get("/api/github-service/health-check")
+async def HealthCheck():
+    return {"status": "200", "message": "서버 상태 확인", "data": "Working"}
