@@ -25,5 +25,5 @@ def GetREADME(repoURL, gitToken=None):
     response = requests.get(apiURL, headers=headers)
     if response.status_code == 200:
         return base64.b64decode(response.json()["content"]).decode("utf-8")
-    print(f"Failed to fetch README.md: {response.status_code}")
+
     return None

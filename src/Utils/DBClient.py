@@ -1,6 +1,7 @@
 import os
+import json
 from dotenv import load_dotenv
-from supabase import create_client
+from supabase import create_client, Client
 
 
 # DB에 접근하는 Key 부르는 함수
@@ -22,3 +23,37 @@ def BucketCall():
     SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET")
 
     return SUPABASE_BUCKET
+
+
+# 유저 ID로 Tag 생성한 모든 정보 가져오기
+def ReadGithubFromUserID(userID):
+    supabase: Client = DBClientCall()
+
+    # SQL 작성
+    sql = f"""
+    SELECT * FROM "Career_Tag"
+    INNER JOIN "Career_Meta_Data" ON "Career_Tag".career_id = "Career_Meta_Data".career_id
+    INNER JOIN "C_Tag" ON "Career_Tag".c_tag_id = "C_Tag".c_tag_id
+    WHERE "Career_Meta_Data".user_id = {int(userID)}
+    """
+
+    # SQL 실행
+    response = supabase.rpc("execute_sql", {"query": sql}).execute()
+
+    return json.dumps(response.data, indent=2)
+
+
+# 유저ID와 github url이 같은 모든 version의 readme 읽어오기
+def ReadREADMEDB(userID, githubURL):
+    supabase: Client = DBClientCall()
+
+    sql = f"""
+    SELECT * FROM "README_Data"
+    WHERE "README_Data".user_id={int(userID)} 
+    and "README_Data".github_url='{githubURL}'
+    """
+
+    # SQL 실행
+    response = supabase.rpc("execute_sql", {"query": sql}).execute()
+
+    return json.dumps(response.data, indent=2)
