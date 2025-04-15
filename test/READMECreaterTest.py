@@ -5,13 +5,20 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.READMECreater.GithubFetcher import DownloadRepoFiles
 from src.READMECreater.READMEGenerator import GenerateREADME
+from src.Upload.Upload2DB import GetVersion, SaveGitData, GetNextReadmeID
+from src.Upload.Upload2Storage import UploadREADME
 
 
 repoURL = input("GitHub URL 입력: ")
-files = DownloadRepoFiles(repoURL)
-readme = GenerateREADME(repoURL, files)
+repoFiles = DownloadRepoFiles(repoURL)
+readmeContent = GenerateREADME(repoURL, repoFiles)
+userID = 312
 
-with open("README.md", "w") as f:
-    f.write(readme)
+version = GetVersion(repoURL)
+readmeID = GetNextReadmeID()
 
-print("README.md 생성 완료!")
+# README Storage & DB에 저장
+downloadURL = UploadREADME(readmeContent, userID, repoURL, version)
+SaveGitData(version, repoURL, readmeID, userID, downloadURL)
+
+print(f"/api/career/download?downloadURL={downloadURL}")

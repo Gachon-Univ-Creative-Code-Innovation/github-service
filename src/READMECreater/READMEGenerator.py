@@ -1,4 +1,5 @@
 import os
+import re
 from groq import Groq
 from dotenv import load_dotenv
 from src.READMECreater.CodeAnalyzer import SummarizeKeywords
@@ -10,6 +11,12 @@ load_dotenv(dotenv_path=os.path.abspath(envPath))
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 # GROQ API를 사용하여 README 생성
 client = Groq(api_key=GROQ_API_KEY)
+
+
+# <think>와 </think> 사이의 내용을 포함하여 모두 제거
+def RemoveThink(text):
+    cleaned = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    return cleaned
 
 
 # README 생성 프롬프트 생성 함수
@@ -50,6 +57,8 @@ def GenerateREADME(repoURL, repoFiles):
     prompt = GeneratePrompt(repoName, imports, funcs, comments)
 
     chat = client.chat.completions.create(
-        messages=[{"role": "user", "content": prompt}], model="qwen-2.5-coder-32b"
+        messages=[{"role": "user", "content": prompt}], model="qwen-qwq-32b"
     )
-    return chat.choices[0].message.content
+
+    ReadmeText = RemoveThink(chat.choices[0].message.content)
+    return ReadmeText
