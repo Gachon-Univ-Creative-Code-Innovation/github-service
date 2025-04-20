@@ -14,6 +14,12 @@ from src.TagCreater.TagMerger import MergeCleanTags
 results = {}
 
 
+# <think>와 </think> 사이의 내용을 포함하여 모두 제거
+def RemoveThink(text):
+    cleaned = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    return cleaned
+
+
 # 응답에서 tags 키 아래의 JSON 목록을 추출하는 함수
 def ExtractJson(text):
     match = re.search(r'({\s*"tags"\s*:\s*\[.*?\]\s*})', text, re.DOTALL)
@@ -52,7 +58,7 @@ def CallLLM(modelName, readmeContent, client):
         content = chatCompletion.choices[0].message.content
         print(f"\n[{modelName}] Raw Output:\n{content}\n{'-'*50}")
 
-        results[modelName] = ExtractJson(content)
+        results[modelName] = ExtractJson(RemoveThink(content))
 
     except Exception as e:
         print(f"Exception in {modelName}: {e}")
@@ -76,7 +82,7 @@ def CallGemini(readme_content, gemini_model):
 
         print(f"\n[Gemini] Raw Output:\n{response.text}\n{'-'*50}")
 
-        results["gemini"] = ExtractJson(response.text)
+        results["gemini"] = ExtractJson(RemoveThink(response.text))
 
     except Exception as e:
         print(f"Gemini exception: {e}")
@@ -99,7 +105,7 @@ def ModelThreading(url):
     gemini = genai.GenerativeModel("gemini-2.0-flash-thinking-exp-01-21")
 
     # LLM Thread에서 호출
-    models = ["qwen-2.5-coder-32b", "llama-3.3-70b-versatile"]
+    models = ["gemma2-9b-it", "llama-3.3-70b-versatile"]
     threads = [
         threading.Thread(target=CallLLM, args=(model, readmeContent, client))
         for model in models
