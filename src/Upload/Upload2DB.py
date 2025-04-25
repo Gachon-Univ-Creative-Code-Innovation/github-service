@@ -56,35 +56,6 @@ def SaveGitData(version, githubURL, readmeID, userID, downloadURL):
     supabase.table("README_Data").insert(data).execute()
 
 
-# Career Tag ID를 찾는 코드
-def GetNextTagID(tagName):
-    supabase = DBClientCall()
-
-    response = (
-        supabase.table("C_Tag").select("c_tag_id").eq("c_tag_name", tagName).execute()
-    )
-
-    # 같은 값이 있을 경우
-    if response.data and len(response.data) > 0:
-        return response.data[0]["c_tag_id"]
-
-    response = (
-        supabase.table("C_Tag")
-        .select("c_tag_id")
-        .order("c_tag_id", desc=True)
-        .limit(1)
-        .execute()
-    )
-
-    # 테이블은 있는데 값이 없는 경우
-    if response.data and len(response.data) > 0:
-        last_id = response.data[0]["c_tag_id"]
-        return int(last_id) + 1
-
-    else:
-        return 1  # 테이블 비어있을 경우
-
-
 # Career ID를 찾는 코드
 def GetNextCareerID():
     supabase = DBClientCall()
@@ -121,11 +92,6 @@ def SavingCareerDB(tagNames, userID, githubURL, imageURL):
     supabase.table("Career_Meta_Data").insert(data).execute()
 
     for tagName in tagNames:
-        # C_Tag 저장
-        tagID = GetNextTagID(tagName)
-        data = {"c_tag_id": tagID, "c_tag_name": tagName}
-        supabase.table("C_Tag").insert(data).execute()
-
         # Career_Tag 저장
-        data = {"c_tag_id": tagID, "career_id": careerID}
+        data = {"c_tag":tagName, "career_id": careerID}
         supabase.table("Career_Tag").insert(data).execute()

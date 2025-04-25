@@ -33,7 +33,6 @@ def ReadGithubFromUserID(userID):
     sql = f"""
     SELECT * FROM "Career_Tag"
     INNER JOIN "Career_Meta_Data" ON "Career_Tag".career_id = "Career_Meta_Data".career_id
-    INNER JOIN "C_Tag" ON "Career_Tag".c_tag_id = "C_Tag".c_tag_id
     WHERE "Career_Meta_Data".user_id = {int(userID)}
     """
 
