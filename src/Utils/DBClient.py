@@ -41,6 +41,23 @@ def ReadGithubFromUserID(userID):
 
     return json.dumps(response.data, indent=2)
 
+# 유저 ID와 github url이 같은 Github의 Image 가져오기
+def ReadImageFromUserID(userID, githubURL):
+    supabase: Client = DBClientCall()
+
+    # SQL 작성
+    sql = f"""
+    SELECT img_url FROM "Career_Meta_Data"
+    WHERE "Career_Meta_Data".user_id={int(userID)} 
+    and "Career_Meta_Data".github_url='{githubURL}'
+    ORDER BY "Career_Meta_Data".career_id DESC
+    LIMIT 1
+    """
+
+    # SQL 실행
+    response = supabase.rpc("execute_sql", {"query": sql}).execute()
+
+    return json.dumps(response.data, indent=2)
 
 # 유저ID와 github url이 같은 모든 version의 readme 읽어오기
 def ReadREADMEDB(userID, githubURL):
@@ -50,6 +67,7 @@ def ReadREADMEDB(userID, githubURL):
     SELECT * FROM "README_Data"
     WHERE "README_Data".user_id={int(userID)} 
     and "README_Data".github_url='{githubURL}'
+    ORDER BY "README_Data".readme_id DESC
     """
 
     # SQL 실행
