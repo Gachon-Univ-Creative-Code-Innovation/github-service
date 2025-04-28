@@ -43,7 +43,7 @@ def GetNextReadmeID():
 
 
 # DB에 해당 내용 저장
-def SaveGitData(version, githubURL, readmeID, userID, downloadURL):
+def SaveGitData(version, githubURL, readmeID, userID, downloadURL, metaData):
     supabase = DBClientCall()
 
     data = {
@@ -52,6 +52,7 @@ def SaveGitData(version, githubURL, readmeID, userID, downloadURL):
         "readme_id": readmeID,
         "user_id": userID,
         "download_url": downloadURL,
+        "meta_data": metaData
     }
     supabase.table("README_Data").insert(data).execute()
 
