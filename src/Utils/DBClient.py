@@ -1,5 +1,4 @@
 import os
-import json
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
@@ -39,13 +38,16 @@ def ReadGithubFromUserID(userID):
     # SQL 실행
     response = supabase.rpc("execute_sql", {"query": sql}).execute()
 
-    return json.dumps(response.data, indent=2)
+    return [item["result"] for item in response.data]
+
 
 # 유저 ID와 github url이 같은 Github의 Image 가져오기
 def ReadImageFromUserID(userID, githubURL):
     supabase: Client = DBClientCall()
 
-    # SQL 작성
+    # userID와 githubURL의 타입 확인
+    print(f"userID: {userID}, githubURL: {githubURL}")
+
     sql = f"""
     SELECT img_url FROM "Career_Meta_Data"
     WHERE "Career_Meta_Data".user_id={int(userID)} 
@@ -54,10 +56,13 @@ def ReadImageFromUserID(userID, githubURL):
     LIMIT 1
     """
 
-    # SQL 실행
     response = supabase.rpc("execute_sql", {"query": sql}).execute()
 
-    return json.dumps(response.data, indent=2)
+    if response.data:
+        return response.data[0]["result"]["img_url"]
+    else:
+        return None  # 데이터가 없으면 None 반환
+
 
 # 유저ID와 github url이 같은 모든 version의 readme 읽어오기
 def ReadREADMEDB(userID, githubURL):
@@ -73,4 +78,4 @@ def ReadREADMEDB(userID, githubURL):
     # SQL 실행
     response = supabase.rpc("execute_sql", {"query": sql}).execute()
 
-    return json.dumps(response.data, indent=2)
+    return [item["result"] for item in response.data]

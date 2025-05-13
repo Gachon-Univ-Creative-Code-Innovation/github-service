@@ -138,45 +138,50 @@ async def ReadUserGithub(userID: int):
         )
 
 
-# 유저가 올린 README 정보 읽기
 @app.get("/api/career/db/readme")
 async def ReadREADME(userID: int, gitURL: str):
     try:
         # README 데이터 읽기
         data = ReadREADMEDB(userID, gitURL)
-        parsedData = json.loads(data)
-        
-        # 데이터가 있으면 첫 번째 데이터 가져오기
-        if parsedData:
-            firstData = parsedData[0]['result']
-            # 이미지 URL 가져오기
-            imgURL = ReadImageFromUserID(userID, gitURL) or ""  # 이미지 URL이 없으면 빈 문자열 처리
-            
-            firstData['img_url'] = imgURL
-            mergedData = json.dumps(firstData, indent=2)
-            
-            return {
-                "status": 200,
-                "message": "요청에 성공하였습니다.",
-                "data": mergedData,
-            }
-        else:
-            # 데이터가 없다면
+
+        if not data:
             return JSONResponse(
                 status_code=404,
-                content={"status": 404, "message": "해당 README 데이터를 찾을 수 없습니다.", "data": None},
+                content={
+                    "status": 404,
+                    "message": "해당 README 데이터를 찾을 수 없습니다.",
+                    "data": None,
+                },
             )
-    
+
+        firstData = data[0]
+
+        # 이미지 URL 가져오기
+        imgResult = ReadImageFromUserID(userID, gitURL)
+
+        imgURL = None
+        if isinstance(imgResult, dict) and "result" in imgResult:
+            imgURL = imgResult["result"].get("img_url")
+        elif isinstance(imgResult, str):  # img_url이 직접 반환될 수도 있음
+            imgURL = imgResult
+
+        print(f"Image URL: {imgURL}")
+
+        # 결과 데이터에 img_url 추가
+        firstData["img_url"] = imgURL if imgURL else ""
+
+        return {
+            "status": 200,
+            "message": "요청에 성공하였습니다.",
+            "data": firstData,
+        }
+
     except Exception as e:
-        # 예외 발생 시 로깅 추가 가능
         print(f"Error: {e}")
         return JSONResponse(
             status_code=400,
             content={"status": 400, "message": "DB read 실패", "data": None},
         )
-
-
-
 
 
 # 헬스 체크
