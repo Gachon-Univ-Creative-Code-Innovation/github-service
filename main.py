@@ -180,6 +180,6 @@ async def ReadREADME(userID: int, gitURL: str):
 
 
 # 헬스 체크
-@app.get("/api/github-service/health-check")
+@app.get("/api/career/health-check")
 async def HealthCheck():
     return {"status": 200, "message": "서버 상태 확인", "data": "Working"}
