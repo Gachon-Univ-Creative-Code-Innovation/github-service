@@ -129,7 +129,7 @@ def ModelThreading(url):
     FinalTags = MergeCleanTags(*[results[m] for m in results])
     resultJson = {"tags": FinalTags}
 
-    refiner = genai.GenerativeModel("learnlm-1.5-pro-experimental")
+    refiner = genai.GenerativeModel("gemini-2.0-flash-thinking-exp-01-21")
     response = refiner.generate_content(
         f'{json.dumps(resultJson, ensure_ascii=False)} Extract only key technologies in JSON format as "tags": []'
     )

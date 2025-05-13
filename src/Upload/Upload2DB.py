@@ -52,7 +52,7 @@ def SaveGitData(version, githubURL, readmeID, userID, downloadURL, metaData):
         "readme_id": readmeID,
         "user_id": userID,
         "download_url": downloadURL,
-        "meta_data": metaData
+        "meta_data": metaData,
     }
     supabase.table("README_Data").insert(data).execute()
 
@@ -94,5 +94,5 @@ def SavingCareerDB(tagNames, userID, githubURL, imageURL):
 
     for tagName in tagNames:
         # Career_Tag 저장
-        data = {"c_tag":tagName, "career_id": careerID}
+        data = {"c_tag": tagName, "career_id": careerID, "user_id": userID}
         supabase.table("Career_Tag").insert(data).execute()
