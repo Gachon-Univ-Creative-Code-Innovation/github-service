@@ -1,0 +1,62 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Installer logs
+pip-log.txt
+
+# Virtual environments
+venv/
+.venv/
+
+# Pyenv
+.python-version
+
+# dotenv environment variables
+.env
+.env.*
+
+# VSCode settings
+.vscode/
+
+# MyPy / Pyright / Pylance type check
+.mypy_cache/
+.pyright/
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+.cache
+
+# pytest
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Mac
+.DS_Store
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# PyCharm
+.idea/
+
+# Uvicorn reload temp
+*.reload
+
+# FastAPI static or uploads (optional)
+static/
+uploads/
