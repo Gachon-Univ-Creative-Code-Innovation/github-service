@@ -1,0 +1,24 @@
+# .github/workflows/deploy.yml
+
+name: FastAPI Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    uses: Gachon-Univ-Creative-Code-Innovation/infra-configs/.github/workflows/fastapi-deploy.yml@main
+    with:
+      service: github-service  # Docker 이미지 이름
+      tag: ${{ github.sha }}    # 커밋 해시를 태그로 사용
+    secrets:
+      GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      SUPABASE_BUCKET: ${{ secrets.SUPABASE_BUCKET }}
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
