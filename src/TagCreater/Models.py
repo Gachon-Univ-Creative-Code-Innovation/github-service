@@ -94,7 +94,7 @@ def ModelThreading(url):
     load_dotenv(dotenv_path=os.path.abspath(envPath))
     GROQ_API_KEY = os.getenv("GROQ_API_KEY")
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+    GITHUB_TOKEN = os.getenv("GH_API_TOKEN")
 
     # Input
     readmeContent = GetREADME(url, GITHUB_TOKEN)
