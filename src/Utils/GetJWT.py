@@ -27,11 +27,15 @@ def GetDataFromToken(token, getWhat):
 # 요청 Header에서 Access Token 추출 코드
 def GetTokenFromHeader(request: Request):
     header = request.headers.get("Authorization")
+    print("[DEBUG] 전체 요청 헤더:", dict(request.headers))
+    print(f"[DEBUG] Authorization 헤더 값: {header}")
 
     if not header:
-        return None
+        raise ValueError("Authorization 헤더가 없습니다.")
     if not header.startswith("Bearer "):
-        return None
+        raise ValueError("Authorization 헤더가 Bearer 타입이 아닙니다.")
 
     token = header[len("Bearer ") :]
+    if not token:
+        raise ValueError("Bearer 토큰이 비어 있습니다.")
     return token

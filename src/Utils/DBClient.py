@@ -30,9 +30,8 @@ def ReadGithubFromUserID(userID):
 
     # SQL 작성
     sql = f"""
-    SELECT * FROM "Career_Tag"
-    INNER JOIN "Career_Meta_Data" ON "Career_Tag".career_id = "Career_Meta_Data".career_id
-    WHERE "Career_Meta_Data".user_id = {int(userID)}
+    SELECT github_url, version, download_url, meta_data FROM "README_Data"
+    WHERE "README_Data".user_id = {int(userID)}
     """
 
     # SQL 실행

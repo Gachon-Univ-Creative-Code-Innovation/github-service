@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 envPath = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
 load_dotenv(dotenv_path=os.path.abspath(envPath))
 
-GITHUB_TOKEN = os.getenv("GH_API_TOKEN")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 HEADERS = {"Authorization": f"token {GITHUB_TOKEN}"} if GITHUB_TOKEN else {}
 
 # 지원하는 프로그래밍 언어별 확장자

@@ -94,5 +94,5 @@ def SavingCareerDB(tagNames, userID, githubURL, imageURL):
 
     for tagName in tagNames:
         # Career_Tag 저장
-        data = {"c_tag": tagName, "career_id": careerID, "user_id": userID}
+        data = {"tag_name": tagName, "career_id": careerID, "user_id": userID}
         supabase.table("Career_Tag").insert(data).execute()
