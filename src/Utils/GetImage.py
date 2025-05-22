@@ -11,7 +11,7 @@ load_dotenv(dotenv_path=os.path.abspath(envPath))
 
 
 # 상수 정의
-GITHUB_TOKEN = os.getenv("GH_API_TOKEN")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 HEADERS = {"Authorization": f"token {GITHUB_TOKEN}"} if GITHUB_TOKEN else {}
 IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".svg"]
 
