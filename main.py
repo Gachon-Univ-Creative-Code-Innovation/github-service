@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse, FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import json
 import httpx
 import tempfile
 
@@ -24,6 +24,15 @@ app = FastAPI(title="GitHub AI API")
 
 class RepoRequest(BaseModel):
     git_url: str
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # README 생성 API
@@ -51,7 +60,7 @@ async def GenerateReadme(request: RepoRequest):
         return {
             "status": 200,
             "message": "요청에 성공하였습니다.",
-            "data": f"/api/career/download?downloadURL={downloadURL}",  # 스토리지 내에 데이터를 user에게 streaming 하는 API Call
+            "data": downloadURL,  # 스토리지 내에 데이터를 user에게 streaming 하는 API Call
         }
 
     except Exception:
