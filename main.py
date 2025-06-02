@@ -36,7 +36,7 @@ app.add_middleware(
 
 
 # README 생성 API
-@app.post("/api/career/readme")
+@app.post("/api/github-service/readme")
 async def GenerateReadme(request: RepoRequest):
     try:
         # README 쓰기
@@ -71,7 +71,7 @@ async def GenerateReadme(request: RepoRequest):
 
 
 # README 다운로드 요청 처리 API
-@app.get("/api/career/download")
+@app.get("/api/github-service/download")
 async def DownloadFile(downloadURL: str):
     async with httpx.AsyncClient() as client:
         try:
@@ -102,7 +102,7 @@ async def DownloadFile(downloadURL: str):
 
 
 # Tag 생성 API
-@app.post("/api/career/tag")
+@app.post("/api/github-service/tag")
 async def GenerateTag(request: RepoRequest):
     try:
         githubURL = request.git_url
@@ -130,7 +130,7 @@ async def GenerateTag(request: RepoRequest):
 
 
 # 유저가 올린 모든 github 정보 읽기
-@app.get("/api/career/db/user")
+@app.get("/api/github-service/db/user")
 async def ReadUserGithub(userID: int):
     try:
         data = ReadGithubFromUserID(userID)
@@ -147,7 +147,7 @@ async def ReadUserGithub(userID: int):
         )
 
 
-@app.get("/api/career/db/readme")
+@app.get("/api/github-service/db/readme")
 async def ReadREADME(userID: int, gitURL: str):
     try:
         # README 데이터 읽기
@@ -194,6 +194,6 @@ async def ReadREADME(userID: int, gitURL: str):
 
 
 # 헬스 체크
-@app.get("/api/career/health-check")
+@app.get("/api/github-service/health-check")
 async def HealthCheck():
     return {"status": 200, "message": "서버 상태 확인", "data": "Working"}
