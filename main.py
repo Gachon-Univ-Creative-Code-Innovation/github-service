@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -45,10 +45,8 @@ async def GenerateReadme(request: RepoRequest):
         readmeContent = GenerateREADME(repoURL, repoFiles)
         metaData = readmeContent[:1000]
 
-        """ 이 부분은 token 연동 후 """
-        # accessToken = GetTokenFromHeader(request)
-        # userID = GetDataFromToken(accessToken, "user_id")
-        userID = 312
+        accessToken = GetTokenFromHeader(request)
+        userID = GetDataFromToken(accessToken, "user_id")
 
         version = GetVersion(repoURL)
         readmeID = GetNextReadmeID()
@@ -109,10 +107,9 @@ async def GenerateTag(request: RepoRequest):
         response = ModelThreading(githubURL)
         tags = ExtractJson(response.text)
 
-        """ 이 부분은 token 연동 후 """
-        # accessToken = GetTokenFromHeader(request)
-        # userID = GetDataFromToken(accessToken, "user_id")
-        userID = 312
+        accessToken = GetTokenFromHeader(request)
+        userID = GetDataFromToken(accessToken, "user_id")
+
         imageURL = GetImageInGithub(githubURL)
         SavingCareerDB(tags, userID, githubURL, imageURL)
 
@@ -122,17 +119,24 @@ async def GenerateTag(request: RepoRequest):
             "data": tags,
         }
 
-    except Exception:
+    except Exception as e:
+        print("[ERROR] Exception in GenerateTag:", e)
+        import traceback
+
+        traceback.print_exc()
         return JSONResponse(
             status_code=400,
-            content={"status": 400, "message": "Tag 생성 실패", "data": None},
+            content={"status": 400, "message": f"Tag 생성 실패: {e}", "data": None},
         )
 
 
 # 유저가 올린 모든 github 정보 읽기
 @app.get("/api/github-service/db/user")
-async def ReadUserGithub(userID: int):
+async def ReadUserGithub(request: Request):
     try:
+        accessToken = GetTokenFromHeader(request)
+        userID = GetDataFromToken(accessToken, "user_id")
+
         data = ReadGithubFromUserID(userID)
 
         return {
@@ -147,6 +151,7 @@ async def ReadUserGithub(userID: int):
         )
 
 
+# 유저가 올린 github url의 README 데이터 읽기
 @app.get("/api/github-service/db/readme")
 async def ReadREADME(userID: int, gitURL: str):
     try:
