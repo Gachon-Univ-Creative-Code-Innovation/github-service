@@ -2,7 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: github-service
-  namespace: github-service
+  namespace: github
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "4886"
 spec:
   replicas: 1
   selector:
@@ -12,6 +16,10 @@ spec:
     metadata:
       labels:
         app: github-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "4886"
     spec:
       containers:
         - name: github-service
@@ -31,12 +39,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: github-service
-  namespace: github-service
+  namespace: github
 spec:
   selector:
     app: github-service
   ports:
     - protocol: TCP
-      port: 4886
+      port: 80
       targetPort: 4886
   type: ClusterIP
