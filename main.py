@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import httpx
 import tempfile
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.READMECreater.GithubFetcher import DownloadRepoFiles
 from src.READMECreater.READMEGenerator import GenerateREADME
@@ -20,6 +21,7 @@ from src.Utils.GetImage import GetImageInGithub
 from src.Utils.DBClient import ReadGithubFromUserID, ReadREADMEDB, ReadImageFromUserID
 
 app = FastAPI(title="GitHub AI API")
+instrumentator = Instrumentator().instrument(app).expose(app)
 
 
 class RepoRequest(BaseModel):

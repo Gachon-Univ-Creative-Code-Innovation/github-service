@@ -12,3 +12,4 @@ pybase64
 supabase
 httpx
 psycopg2-binary
+prometheus-fastapi-instrumentator
