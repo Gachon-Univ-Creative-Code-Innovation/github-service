@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, FileResponse
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import httpx
 import tempfile
@@ -28,18 +27,9 @@ class RepoRequest(BaseModel):
     git_url: str
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
 # README 생성 API
 @app.post("/api/github-service/readme")
-async def GenerateReadme(request: RepoRequest):
+async def GenerateReadme(request: RepoRequest, fast_api: Request):
     try:
         # README 쓰기
         repoURL = request.git_url
@@ -47,7 +37,7 @@ async def GenerateReadme(request: RepoRequest):
         readmeContent = GenerateREADME(repoURL, repoFiles)
         metaData = readmeContent[:1000]
 
-        accessToken = GetTokenFromHeader(request)
+        accessToken = GetTokenFromHeader(fast_api)
         userID = GetDataFromToken(accessToken, "user_id")
 
         version = GetVersion(repoURL)
@@ -103,13 +93,13 @@ async def DownloadFile(downloadURL: str):
 
 # Tag 생성 API
 @app.post("/api/github-service/tag")
-async def GenerateTag(request: RepoRequest):
+async def GenerateTag(request: RepoRequest, fast_api: Request):
     try:
         githubURL = request.git_url
         response = ModelThreading(githubURL)
         tags = ExtractJson(response.text)
 
-        accessToken = GetTokenFromHeader(request)
+        accessToken = GetTokenFromHeader(fast_api)
         userID = GetDataFromToken(accessToken, "user_id")
 
         imageURL = GetImageInGithub(githubURL)

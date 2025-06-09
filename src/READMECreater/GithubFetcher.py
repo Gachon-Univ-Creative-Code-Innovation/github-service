@@ -39,26 +39,35 @@ def IsValidExtension(fileName):
 
 # GitHub 저장소의 모든 코드 파일을 재귀적으로 가져오는 함수
 def FetchFiles(url):
+    print(f"[FetchFiles] 요청 URL: {url}")  # 디버깅용
     response = requests.get(url, headers=HEADERS)
-    # 요청 실패 시 예외 처리
+    print(f"[FetchFiles] 응답 status: {response.status_code}")  # 디버깅용
     if response.status_code != 200:
-        raise Exception(f"Failed to fetch repository contents: {response.json()}")
+        print(f"[FetchFiles] 오류 응답 내용: {response.text}")  # 디버깅용
+        raise Exception(f"Failed to fetch repository contents: {response.text}")
 
-    # JSON 응답에서 파일 및 디렉토리 정보 추출
     files = []
     for item in response.json():
+        print(
+            f"[FetchFiles] item: {item.get('name')} / type: {item.get('type')}"
+        )  # 디버깅용
         if item["type"] == "file" and IsValidExtension(item["name"]):
+            print(f"[FetchFiles] 파일 다운로드: {item['download_url']}")  # 디버깅용
             file_content = requests.get(item["download_url"], headers=HEADERS).text
             files.append((item["name"], file_content))
         elif item["type"] == "dir":
+            print(f"[FetchFiles] 디렉토리 진입: {item['url']}")  # 디버깅용
             files.extend(FetchFiles(item["url"]))
     return files
 
 
 # GitHub 저장소의 모든 코드 파일을 가져오는 함수
 def DownloadRepoFiles(repoURL):
+    print(f"[DownloadRepoFiles] 입력 repoURL: {repoURL}")  # 디버깅용
     repoPath = re.sub(r"https://github.com/|.git$", "", repoURL.strip("/"))
+    print(f"[DownloadRepoFiles] 변환된 repoPath: {repoPath}")  # 디버깅용
     apiURL = f"https://api.github.com/repos/{repoPath}/contents/"
+    print(f"[DownloadRepoFiles] 호출할 apiURL: {apiURL}")  # 디버깅용
     return FetchFiles(apiURL)
 
 
